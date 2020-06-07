@@ -11,6 +11,9 @@ int div(int a, int b)
     return sum;
 }
 
+#define getchar() in()
+#define putchar(ch) out(ch)
+/*
 int getchar()
 {
     return in();
@@ -21,7 +24,7 @@ int putchar(int ch)
     out(ch);
     return ch;
 }
-
+*/
 int out_num(int n)
 {
 
@@ -57,6 +60,7 @@ int puts(char *str)
 
     return count;
 }
+
 
 int printf(char *fmt, ...)
 {
@@ -96,14 +100,37 @@ int printf(char *fmt, ...)
     return count;
 }
 
-int main()
+int scanf(char *fmt, ...)
 {
+    char *va_list = va_start(&fmt);
+    int p = 0;
+    char buffer[100];
+    int ch;
     int i;
-    int j;
 
-    for(i = 0; i < 10; i++) {
-        for(j = 0; j < i; j++)
-            printf("*");
-        printf("\n");
+    for(i = 0; ch != '\n' ; i++) {
+        ch = getchar();
+        buffer[i] = ch;
+    }
+    buffer[i] = 0;
+
+   // printf("buffer: %s\n", buffer);
+  
+    while(*fmt) {
+        if(*fmt != '%') {
+            putchar(*fmt);
+            count++;
+        } else {
+            fmt++;
+            if(*fmt == 'd')
+                count = count + get_num(va_list[p++]);
+            else if(*fmt == 's')
+                count = count + gets(va_list[p++]);
+            else if(*fmt == 'c') {
+                count++;
+                putchar(va_list[p++]);
+            }
+        } 
+        fmt++;
     }
 }

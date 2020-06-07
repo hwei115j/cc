@@ -1,4 +1,10 @@
+#include "stdio.h"
+
 int main()
 {
-    out('?');
+    char buffer[20];
+    int ch;
+    int i;
+
+    scanf("%s", buffer);
 }

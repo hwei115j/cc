@@ -107,21 +107,21 @@ int main(int argc, char *argv[])
         help();
     } 
     else if(flag['s']) {
-        SYS("%s < %s > %s", c0, file, o_s);
+        SYS("cpp %s | %s > %s", file, c0, o_s);
     }
     else if(flag['a']) {
-        SYS("%s < %s | %s", sc, file, sexp);
+        SYS("cpp %s | %s > %s | %s", file, sc, sexp);
     }
     else if(flag['S']) {
-        SYS("%s < %s > %s && %s %s ./out && %s --dump-stack %d ./out", c0, file, o_s, as, o_s, vm, min);
+        SYS("cpp %s | %s > %s && %s %s ./out && %s --dump-stack %d ./out", file, c0, o_s, as, o_s, vm, min);
         SYS("rm -f %s out", o_s);
     }
     else if(flag['m']) {
-        SYS("%s < %s > %s && %s %s ./out && %s --dump-memory %d %d ./out", c0, file, o_s, as, o_s, vm, min, max);
+        SYS("cpp %s | %s > %s && %s %s ./out && %s --dump-memory %d %d ./out", file, c0, o_s, as, o_s, vm, min, max);
         SYS("rm -f %s out", o_s);
     }
     else {
-        SYS("%s < %s > %s && %s %s ./out && %s ./out", c0, file, o_s, as, o_s, vm);
+        SYS("cpp %s | %s > %s && %s %s ./out && %s ./out", file, c0, o_s, as, o_s, vm);
         SYS("rm -f %s out", o_s);
     }
 }
