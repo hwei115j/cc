@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
         SYS("cpp %s | %s > %s", file, c0, o_s);
     }
     else if(flag['a']) {
-        SYS("cpp %s | %s > %s | %s", file, sc, sexp);
+        SYS("cpp %s | %s | %s", file, sc, sexp);
     }
     else if(flag['S']) {
         SYS("cpp %s | %s > %s && %s %s ./out && %s --dump-stack %d ./out", file, c0, o_s, as, o_s, vm, min);

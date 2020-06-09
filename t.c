@@ -2,9 +2,6 @@
 
 int main()
 {
-    char buffer[20];
-    int ch;
-    int i;
-
-    scanf("%s", buffer);
+    for(int i = 9; i; i--)
+        printf("%s", "**********\n" + i);
 }

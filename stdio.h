@@ -1,3 +1,5 @@
+
+
 int div(int a, int b)
 {
     int sum = 0;
@@ -67,6 +69,8 @@ int printf(char *fmt, ...)
     char *va_list = va_start(&fmt);
     int p = 0;
     int count;
+    int n;
+    int reg = 0;
 
     while(*fmt) {
         if(*fmt != '%') {
@@ -93,6 +97,16 @@ int printf(char *fmt, ...)
                 count++;
                 putchar(va_list[p++]);
             }
+            else if(*fmt > '0' && *fmt < '9' || *fmt == '0' || *fmt == '9') {
+                n = *fmt - '0';
+                fmt++;
+                if(*fmt == 'd')
+                    reg = out_num(va_list[p++]);
+                count = count + reg;
+
+                for(; reg < n; reg++)
+                    putchar(' ');
+            }
         } 
         fmt++;
     }
@@ -100,37 +114,3 @@ int printf(char *fmt, ...)
     return count;
 }
 
-int scanf(char *fmt, ...)
-{
-    char *va_list = va_start(&fmt);
-    int p = 0;
-    char buffer[100];
-    int ch;
-    int i;
-
-    for(i = 0; ch != '\n' ; i++) {
-        ch = getchar();
-        buffer[i] = ch;
-    }
-    buffer[i] = 0;
-
-   // printf("buffer: %s\n", buffer);
-  
-    while(*fmt) {
-        if(*fmt != '%') {
-            putchar(*fmt);
-            count++;
-        } else {
-            fmt++;
-            if(*fmt == 'd')
-                count = count + get_num(va_list[p++]);
-            else if(*fmt == 's')
-                count = count + gets(va_list[p++]);
-            else if(*fmt == 'c') {
-                count++;
-                putchar(va_list[p++]);
-            }
-        } 
-        fmt++;
-    }
-}
