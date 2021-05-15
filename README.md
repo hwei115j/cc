@@ -176,21 +176,9 @@ Mano machine指令集
 第二個部分為語法分析器(Syntax Analyzer)，在此編譯器將會分析各個元素的組成格式及結構；
 第三個部分則是程式碼產生器(Code Generator)，在此編譯器會將符合使用者設定的輸入內容進行相對應的格式輸出
 其流程圖如下所示
-```dot
-digraph D {
-	rankdir=LR;
-    node [shape=box];
-    a [label=" Lexical Analyzer "];
-    b [label=" Syntax Analyzer "];
-    c [label=" Code Generator "];
-    Input [shape = plaintext];
-    Output [shape = plaintext];
-    Input -> a;
-    a -> b [label = "Token"];
-    b -> c [label = "AST"];
-    c -> Output
-}
-```
+
+![編譯流程圖](_v_images/20210516032539814_30898.svg)
+
 #### 詞彙分析器
 將原始文字串流(Source code)，根據使用者自訂的規則，分為系統能辨識的有意義的區塊，稱為token，供下一階段的程式使用。
 我們是根據C語言的規則去建立關鍵字。
@@ -210,43 +198,13 @@ digraph D {
 |  ;   | TTYPE_PUNCT |
 
 而詞彙分析器，本質上為一有限狀態自動機(finite-state machine，縮寫：FSM)，由多個狀態組成，根據輸入而轉移狀態，例如我們要解析Id這類型的token，那他的FSM如圖所示。
-
- ```dot
- digraph finite_state_machine {
-	rankdir=LR;
-	size="8,5"
-	node [shape = doublecircle]; start,END,ERROR;
-	node [shape = circle];
-	start->start [label = "空白"]
-	start->Id [label = "A-Z、a-z、_"]
-	Id->Id [label = "A-Z、a-z、0-9、_        "]
-	Id->ERROR [label = "  ^[A-Z、a-z、0-9、EOF、空白]"]
-	Id->END  [label = EOF]
-	Id->start [label = "空白"]
-}
- ```
+![FSM](_v_images/20210516032633454_2462.svg)
  詞彙分析器解析Id過程
- 
+
 #### 語法分析器
 語法分析器主要的功能是根據使用者定義的語法規則，藉由詞彙分析器傳入的token，分析組成格式及結構，判斷token是否符合語法結構，而語法分析最後結果是生成容易被電腦解讀的AST(Abstract Syntax Tree 抽象語法樹)，供後續階段使用。
 例如在function定義中，每個function在function name之後接的是左括號 `(`，如果function name之後不是左括號`(`，那就回傳錯誤，並給使用者錯誤訊息，如果解析正確，那便產生出AST，例如x = 1 + 2 * 3根據語法可以解析成以下的AST
-
-```dot
-digraph D {
-    node [shape = circle];
-    x;
-    eq [label = "="];
-    mul [label = "*"];
-    _add [label = "+"];
-    dec1 [label = "1"];
-    dec2 [label = "2"];
-    dec3 [label = "3"];
-    eq -> {x, _add};
-    _add -> {dec1, mul}
-    mul -> {dec2, dec3}
-}
-
-```
+![AST1](_v_images/20210516032658200_27419.svg)
 AST示意圖
 
 #### 程式碼產生器
@@ -426,36 +384,8 @@ enum {
 
 將其以圖的形式展示如下，部份命名採用縮寫
 
-```dot
-digraph graphname {
-    rotate=90
-    ratio=0.7
-    "<cond-expr>" -> "<log-or-expr>"
-    "<cond-expr>" -> "<log-or-expr> ? <expr> : <cond-expr>"
-
-    "<log-or-expr>" -> "<log-and-expr>"
-    "<log-or-expr>" -> "<log-or-expr> || <log-and-expr>"
-
-    "<log-and-expr>" -> "<incl-or-expr>"
-    "<log-and-expr>" -> "<log-and-expr> && <incl-or-expr>"
-
-    "<incl-or-expr>" -> "<exc-or-expr>"
-    "<incl-or-expr>" -> "<incl-or-expr> | <exc-or-expr>"
-    
-    "<exc-or-expr>" -> "<and-expr>"
-    "<exc-or-expr>" -> "<exc-or-expr> ^ <and-expr>"
-    
-    "<and-expr>" -> "<eq-expr>"
-    "<and-expr>" -> "<and-expr> & <eq-expr>"
-
-    "<eq-expr>" -> "<rel-expr>"
-    "<eq-expr>" -> "<eq-expr> == <rel-expr>"
-    "<eq-expr>" -> "<eq-expr> != <rel-expr>"
-}
-```
-
 在程式上的實作則為
-
+![BNF](_v_images/20210516032823683_30358.svg)
 ```c
 static Ast *conditional_expr()
 {
@@ -645,18 +575,7 @@ main,           DEC     0
 4. BP = SP
 
 呼叫後的記憶體位置如下圖
-```dot
-digraph st2{
-    fontsize = 10;
-    node [fontname = "Verdana", fontsize = 10, color="skyblue", shape="record"];
-    _BP [label = "BP", shape = box]; 
-    _SP [label = "SP", shape = box]; 
-    memory [label="{<head> ||...|parm 3|parm 2|parm 1|return adder| old BP |<n>...||}"];
-    _BP -> memory:n;
-    _SP -> memory:n;
-}
-
-```
+![mmap](_v_images/20210516032854581_28062.svg)
 
 而函式返回時的動作如下
 1. 將返回值放入AC
